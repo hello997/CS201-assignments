@@ -1,0 +1,11 @@
+// Name: Olivia Zhu (odz)
+// Course: CompSci 201
+// Purpose: This class returns the distance something falls given time, starting velocity, and gravity as acceleration.
+
+public class Gravity {
+//did this APT from last semester as practice
+      public double falling(double time, double velo){
+        double distance = velo*time + 1/2*9.8*time*time;
+        return distance;
+      }
+  }
