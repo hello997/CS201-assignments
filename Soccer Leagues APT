@@ -1,0 +1,27 @@
+// Name: Olivia Zhu (odz)
+// Course: CompSci 201
+// Purpose: This class returns scores of a tournament based on a string of wins, losses, and draws.
+
+public class SoccerLeagues {
+
+//running this program with print output works in Eclipse; not sure why isn't running on the APT tester
+	public int[] points(String[] matches){
+		int dimension = matches[0].length(); //dimension of one side of box
+		int[] totalpoints = new int[dimension]; //creating array with a size of the number of teams
+		for (int i = 0; i<dimension; i++){ //tracking index that corresponds to home team number
+			for (int j=0; j<dimension; j++){ //tracking index that corresponds to away team number
+				if (matches[i].charAt(j) == 'W'){ //the jth letter of the ith word
+					totalpoints[i]+=3; //a W adds three points to the home team
+				}
+				else if (matches[i].charAt(j) == 'D'){ //a D adds one point to home team and to away team
+					totalpoints[i]+=1;
+					totalpoints[j]+=1;
+				}
+				else if (matches[i].charAt(j) == 'L'){ //a L adds three points to the away team
+					totalpoints[j]+=3;
+				}
+			}
+		}
+		return totalpoints;
+	}
+}
