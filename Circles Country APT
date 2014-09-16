@@ -1,0 +1,22 @@
+// Name: Olivia Zhu (odz)
+// Course: CompSci 201
+// Purpose: This class returns how many circles one must cross to get from one point to another.
+
+public class CirclesCountry {
+	//discussed in recitation
+	public boolean inCircle(int x, int y, int xC, int yC, int r){ //returns true if a point is within the circle
+		double distanceFromCenter = Math.sqrt(Math.pow(x-xC, 2) + Math.pow(y-yC, 2));
+		return distanceFromCenter < r;
+	}
+	
+	public int leastBorders(int[] x, int[] y, int[] r, int x1, int y1, int x2, int y2){
+		int borderCount = 0;
+		//it is necessary to cross a border when one point is inside a circle and the other is outside
+		for (int i=0; i<x.length; i++){	
+			if (inCircle(x1,y1,x[i],y[i],r[i]) != inCircle(x2,y2,x[i],y[i],r[i])){
+				borderCount++;
+			}
+		}
+		return borderCount;
+	}
+}
