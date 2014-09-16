@@ -1,0 +1,33 @@
+// Name: Olivia Zhu (odz)
+// Course: CompSci 201
+// Purpose: This class returns the mode(s) of a series of test scores.
+
+import java.util.Arrays;
+
+ public class ClassScores {
+      public int[] findMode(int[] scores) {
+    	  int record = 0; //keeping track of the current highest occurrence
+    	  int repeatedScores = 0; //keeping track of number of scores tied for highest occurrence
+    	  int[]modes = new int[50];
+          for (int i=0; i<scores.length; i=i+1){ //going through each score
+        	  int temp = 1;
+        	  for (int j=i+1; j<scores.length; j=j+1){ //going through the rest of the scores to compare to above score
+        		  if (scores[i]==scores[j]){
+        			  temp+=1;
+        		  }
+        	  }
+        	  if (temp>record){
+            	  modes = new int[50]; //new array with highest score and then zeroes
+        		  modes[0]=scores[i];
+        		  record=temp; //highest occurrence becomes new record
+        		  repeatedScores=0;
+        	      }
+        	  else if (temp==record){ //there is a score tied for highest occurrence
+        		  repeatedScores++; //there is another repeated score
+        		  modes[repeatedScores]=scores[i]; //adding this score to array
+        	  }
+          }
+          Arrays.sort(modes); //sorting array; will likely contain many entries of 0 at front
+          return Arrays.copyOfRange(modes, modes.length - repeatedScores - 1, modes.length); //taking number of tied scores from back
+      }
+   }
