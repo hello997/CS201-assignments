@@ -1,0 +1,26 @@
+// Name: Olivia Zhu (odz)
+// Course: CompSci 201
+// Purpose: This class returns the percentage of C's and G's in a strand of DNA.
+
+public class DNAcgcount
+{
+    public double ratio(String dna)
+    {
+    	double total = dna.length();
+    	double count = 0;
+    	for (int i=0; i<total; i=i+1)
+    	{
+    		String temp = " " + dna.charAt(i); //converting character into string for ease of comparison in if statement
+    		if (temp.equals(" c") || temp.equals(" g")){
+    			//System.out.println("match");
+    			count++;
+    		}
+    	}
+    	//System.out.println(count);
+    	double ratio = count/total;
+    	if (dna.length() == 0){
+    		return 0.0;
+    	}
+		return ratio;
+    }
+}
