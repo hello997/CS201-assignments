@@ -1,0 +1,117 @@
+package src;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+/*************************************************************************
+ * Author: Olivia Zhu
+ * Course: CompSci 201, Fall 2014
+ * Collaborators:  none
+ * Resources Used: references to StackOverflow
+ * Comments: This class reads a file with a set of numbers and also has a digit place as input.
+ * The class prints the amount of times each digit(0-9) appears at the specified digit place.
+ * 
+ * Known bugs: 
+ * 
+ *************************************************************************/
+
+public class Prestidigitation {
+    public static final int MAX_DIGIT = 10;
+    public static int tallyCount = 0;
+    
+    // chooser allows users to select a file by navigating through
+    // directories
+    private static JFileChooser ourChooser = new JFileChooser(System
+            .getProperties().getProperty("user.dir"));
+
+    /**
+     * Brings up chooser for user to select a file
+     * @return Scanner for user selected file, null if file not found
+     */
+    public static  Scanner getScanner(){
+        int retval = ourChooser.showOpenDialog(null);
+        
+        if (retval == JFileChooser.APPROVE_OPTION){
+            File f = ourChooser.getSelectedFile();	
+            Scanner s;
+            try {
+                s = new Scanner(f);
+            } catch (FileNotFoundException e) {
+                return null;
+            }
+            return s;
+	    }
+        return null;
+    }
+
+    /**
+	 * Reads all of the integers from the given file 
+	 * @param sc in legal (i.e., non-null) text file for reading
+	 * @return list of integers from the file
+	 */
+	public static ArrayList<Integer> readNumbers(Scanner sc) { //Reads the integers from a given file and returns them in an ArrayList
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
+		while(sc.hasNextLine()) {
+			while (sc.hasNextInt()){ //excluding comments in text file; assumes that comments will be contained in one line
+				int beep = sc.nextInt();
+			    numbers.add(beep);
+			    } 
+		sc.nextLine();
+		}
+		return numbers;
+		}
+
+	/**
+	 * Returns the [0-MAX_DIGIT] digit distribution for nums 
+	 * nthDigitTally([12176, 5476, 543, 3490, 24892, 28619, 2595, 603, 2527, 1465, 1858], 0)
+	 *  should return [0, 3, 4, 1, 0, 2, 1, 0, 0, 0] for MAX_DIGIT == 9
+	 * @param nums non-null list of positive integers
+	 * @param n zero-indexed digit, so that 0 is the first/leftmost digit, 1 is second digit, etc.
+	 * @return distribution for each digit in range [0,MAX_DIGIT]
+	 */
+	public static int[] nthDigitTally(ArrayList<Integer> nums, int n) { //counts the number of each digit(0-9) at digit place n through a list of integers
+		int[] tally = new int[10];
+		for (Integer num:nums){ //iterates through all of the integers in the ArrayList
+			int totalDigits = (int) Math.log10(num); //will actually be total digits-1
+			for (int i=0; i<=totalDigits; i++){ //iterates through the entire integer
+				int divide = (int) Math.pow(10, totalDigits-i); //the power of 10 by which I will divide to determine the next digit
+				if (i == n){ //only add to tally when analyzing the specified digit place
+					tally[num/divide]++;
+					tallyCount++;
+				}
+				num = num%divide; //gives number with remaining digits after i
+			}
+		}
+		return tally;
+	}
+	
+	public int nthDigit(int n, int num){
+		System.out.println("I don't like this method cuz I included it in the other method and it's only here cuz Forbes said it had to be");
+		int totalDigits = (int) Math.log10(num); //will actually be total digits-1
+		for (int i=0; i<=totalDigits; i++){ //iterates through the entire integer
+			int divide = (int) Math.pow(10, totalDigits-i); //the power of 10 by which I will divide to determine the next digit
+			if (i ==n){
+				return num/divide;
+			}
+		}
+		return 0;
+	}
+	
+    public static void main(String[] args) { //prints the occurrences of each digit(0-9) at digit place n through a list of integers read from file
+    	int M = Integer.parseInt(JOptionPane.showInputDialog("Enter n", 0));
+    	Scanner sc = getScanner();
+    	ArrayList<Integer> nums = readNumbers(sc);
+    	int[] tallyArray = nthDigitTally(nums, M);
+    	if (tallyCount==0){
+    		System.out.println("Invalid input: exceeds number length");
+    	}
+    	else{
+    		for (int i=0; i<tallyArray.length; i++){
+    			System.out.println(i+"s: "+tallyArray[i]+" ("+(int)(((double)tallyArray[i]/tallyCount)*100) +"%)");
+    		}
+    	}
+    }
+}
