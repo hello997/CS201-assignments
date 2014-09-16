@@ -1,0 +1,18 @@
+// Name: Olivia Zhu (odz)
+// Course: CompSci 201
+// Purpose: This class returns a string of which users, based on an array of rights, have minimum access. 
+
+public class AccessLevel {
+	public String canAccess(int[] rights, int minPermission){
+		String access = new String("");
+		for (int i=0; i<rights.length; i++){
+			if (rights[i] >= minPermission){ //comparing entry of the array rights to minPermission
+				access = access + "A";
+			}
+			else{
+				access = access + "D";
+			}
+		}
+		return access;
+	}
+}
