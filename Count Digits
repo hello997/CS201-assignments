@@ -1,0 +1,17 @@
+// Name: Olivia Zhu (odz)
+// Course: CompSci 201
+// Purpose: This class counts the number of times a digit appears in a number.
+
+public class CountAppearances {
+	public int numberTimesAppear(int number, int digit){
+		int appearances = 0; //count of how many times the digit appears
+		String num = new String(Integer.toString(number)); //the number input becomes a string
+		char dig = (char) ((char) digit+48);  //converting the integer digit to a character using a corresponding ascii number
+		for (int i=0; i<num.length(); i++){ //cycles through the entire input number
+			if (num.charAt(i)==dig){ //comparing characters in string and the characterized digit
+				appearances++;
+			}
+		}
+		return appearances;
+	}
+}
