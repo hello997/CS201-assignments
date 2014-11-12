@@ -1,0 +1,40 @@
+import java.util.*;
+
+public class Dirsort {
+	
+	public String[] sort(String[] dirs){
+		
+		ArrayList<Integer> lengths = new ArrayList<Integer>();
+		for (String d:dirs){
+			int counter = 0;
+			for(int i=0; i<d.length(); i++) {
+			    if(d.charAt(i) == '/') {
+			        counter++;
+			    }
+			}
+			lengths.add(counter);
+		}
+		
+		int count = 0;
+		String[] array = new String[lengths.size()];
+		while (count < array.length){
+			int index=0;
+			int compare = lengths.get(0);
+			for (int j=1; j<lengths.size(); j++){
+				if (lengths.get(j)<compare){
+					compare = lengths.get(j);
+					index = j;
+				}
+				else if (lengths.get(j)==compare){
+					if (dirs[j].compareTo(dirs[index])<0){
+						index = j;
+					}
+				}
+			}
+			lengths.set(index,1000);
+			array[count]=dirs[index];
+			count++;
+		}
+		
+		return array;
+	}
