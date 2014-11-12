@@ -1,0 +1,47 @@
+import java.util.*;
+
+public class NewHouse {
+	public int count (int[] x, int[]y){
+		int houseCount = 0;
+		ArrayList<Integer> y1 = new ArrayList<Integer>();
+		ArrayList<Integer> y2 = new ArrayList<Integer>();
+		ArrayList<Integer> xvalue = new ArrayList<Integer>();
+		for (int i=0; i<x.length; i++){
+			for (int j=i+1; j<x.length; j++){
+				if (x[i]==x[j]){ //first find duplicates in x
+					y1.add(y[i]); //record one of y values that will be bound
+					y2.add(y[j]); //record other y value that will be bound
+					xvalue.add(x[i]); //add this x value to an array
+					//y1, y2, and xvalue should have same indices
+				}
+			}
+		}
+		ArrayList<Integer> newX = new ArrayList<Integer>();
+		ArrayList<Integer> newY = new ArrayList<Integer>();
+		for (int k=0; k<y.length; k++){
+			for (int m=k+1; m<y.length; m++){
+				if (y[k]==y[m]){ //finding repeats within y array
+					for (int b=0; b<y1.size(); b++){ //cycling through y1/y2
+						if ((y1.get(b)<y[k] && y[k]<y2.get(b)) || (y2.get(b)<y[k] && y[k]<y1.get(b))){ //if between the y values
+							if ((x[k]<xvalue.get(b) && xvalue.get(b)<x[m]) || (x[m]<xvalue.get(b) && xvalue.get(b)<x[k])){
+								boolean checkRepeats = false;
+								for (int c=0; c<newX.size(); c++){
+									if (xvalue.get(b)==newX.get(c) && y[k]==newY.get(c)){
+										checkRepeats = true;
+									}
+								}
+								if (!checkRepeats){
+									houseCount++;
+								}
+								newX.add(xvalue.get(b));
+								newY.add(y[k]);
+							}
+						}
+					}
+
+				}
+			}
+		}
+		return houseCount;
+	}
+}
