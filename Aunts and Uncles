@@ -1,0 +1,45 @@
+import java.util.*;
+
+public class AuntUncle {
+	public String[] list(String[] parents, String target){
+		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+		//Go through all of the strings once to add map values
+		for (String parent:parents){
+			Scanner in = new Scanner(parent);
+			String parent1 = in.next();
+			String parent2 = in.next();
+			String child = in.next();
+			ArrayList<String> tempparents = new ArrayList<String>(2);
+			tempparents.add(parent1);
+			tempparents.add(parent2);
+			map.put(child, tempparents);
+		}
+		
+		ArrayList<String> myParents = map.get(target);
+		ArrayList<String> myGrandparents = new ArrayList<String>(4);
+		if (myParents!=null){
+			for (String p:myParents){
+				if (map.containsKey(p)){
+					myGrandparents.addAll(map.get(p));
+				}
+			}
+		}
+		
+		TreeSet<String> aunts = new TreeSet<String>();
+		for (String m:map.keySet()){
+			for (int b=0; b<myGrandparents.size(); b++){
+				if (map.get(m).contains(myGrandparents.get(b))){
+					if (!myParents.get(0).equals(m) && !myParents.get(1).equals(m)){
+						if (!m.equals(target)){
+							aunts.add(m);
+							b=4;
+						}
+					}
+				}
+			}
+		}
+		
+		String[] result = aunts.toArray(new String[aunts.size()]);
+		return result;
+	}
+}
