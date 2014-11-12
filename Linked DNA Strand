@@ -1,0 +1,217 @@
+
+public class LinkStrand implements IDnaStrand {
+    private StringBuilder myInfo;
+    private int myAppends = 0;
+    private Node head;
+    private Node tail;
+    private long mySize;
+    
+    /**
+     * Create a strand representing an empty DNA strand, length of zero.
+     */
+    public LinkStrand() {
+    	// Syntactic trick: calls the other constructor (the one that
+    	// takes a String) with an empty String.
+    	this("");
+    }
+
+    /**
+     * Create a strand representing s. No error checking is done to 
+     * see if s represents valid genomic/DNA data.
+     * @param s is the source of cgat data for this strand
+     */
+    public LinkStrand(String s) {
+    	myInfo = new StringBuilder(s);
+    	Node n = new Node(s, null);
+        head = n;
+        tail = n; 
+        mySize = s.length();
+    }
+    
+    /**
+     * Cut this strand at every occurrence of enzyme, essentially replacing
+     * every occurrence of enzyme with splicee.
+     * @param enzyme is the pattern/strand searched for and replaced
+     * @param splicee is the pattern/strand replacing each occurrence of enzyme
+     * @return the new strand leaving the original strand unchanged.
+     */
+    public IDnaStrand cutAndSplice(String enzyme, String splicee){ //should return a linkedlist in the form of LinkStrand
+        int pos = 0;
+        int start = 0;
+        StringBuilder search = myInfo;
+        boolean first = true;
+        LinkStrand ret = null;
+
+        if (head.next != null){ 
+    		throw new RuntimeException("Link strand has more than one node");
+    	}
+    	
+    	else{
+            while ((pos = search.indexOf(enzyme, pos)) >= 0) {
+                if (first){
+                    ret = new LinkStrand(search.substring(start, pos));
+                    first = false;
+                }
+                else {
+                     ret.append(search.substring(start, pos));        
+                }
+                start = pos + enzyme.length();
+                ret.append(splicee);
+                pos++;
+            }
+
+            if (start < search.length()) {
+            	// NOTE: This is an important special case! If the enzyme
+            	// is never found, return an empty String.
+            	if (ret == null){
+            		ret = new LinkStrand("");
+            	}
+            	else {
+            		ret.append(search.substring(start));
+            	}
+            }
+            return ret;
+    	}
+        
+    }
+    	
+    	
+    /**
+     * Returns the number of elements/base-pairs/nucleotides in this strand.
+     * @return the number of base-pairs in this strand
+     */
+    @Override
+    public long size(){
+    	return mySize;
+    	/*Node n = head;
+    	long size = n.size();
+    	while (n.next != null){
+    		size += n.next.size();
+    	}
+    	return size;*/
+    }
+
+    @Override
+    public String toString(){
+    	Node n = head;
+    	String s = n.value;
+    	while (n.next != null){
+    		s = s + n.next.value;
+    	}
+    	return s;
+    }
+    
+    /**
+     * Initialize by copying DNA data from the string into this strand,
+     * replacing any data that was stored. The parameter should contain only
+     * valid DNA characters, no error checking is done by the this method.
+     * 
+     * @param source is the string used to initialize this strand
+     */
+    @Override
+    public void initializeFrom(String source){
+    	Node n = new Node(source, null);
+        head = n;
+        tail = n;
+        myInfo = new StringBuilder(source);
+        mySize = source.length();
+    }
+
+    /**
+     * Return some string identifying this class.
+     * @return a string representing this strand and its characteristics
+     */
+    @Override
+    public String strandInfo(){
+    	return this.getClass().getName();
+    }
+
+    /**
+     * Appends the parameter to this strand changing this strand to represent
+     * the addition of new characters/base-pairs, e.g., changing this strand's
+     * size.
+     * <P>
+     * If possible implementations should take advantage of optimizations
+     * possible if the parameter is of the same type as the strand to which data
+     * is appended.
+     * 
+     * @param dna is the strand being appended
+     * @return this strand after the data has been added
+     */
+    @Override
+    public IDnaStrand append(IDnaStrand dna){
+        if (dna instanceof LinkStrand) {
+        	Node temp = tail;
+    		Node n = new Node(dna.strandInfo(), null);
+    		mySize += dna.strandInfo().length();
+    		n.previous = temp;
+    		temp.next = n;
+    		tail = n;
+        	myAppends++;
+        	return this;
+        } else {
+            return append(dna.toString());
+        }
+    }
+
+    /**
+     * Similar to append with an <code>IDnaStrand</code> parameter in
+     * functionality, but fewer optimizations are possible. Typically this
+     * method will be called by the  <code>append</code> method with an IDNAStrand
+     * parameter if the
+     * <code>IDnaStrand</code> passed to that other append method isn't the same class as the strand
+     * being appended to.
+     * 
+     * @param dna is the string appended to this strand
+     * @return this strand after the data has been added
+     */
+    @Override
+    public IDnaStrand append(String dna){
+    	Node temp = tail;
+		Node n = new Node(dna, null);
+		n.previous = temp;
+		temp.next = n;
+		tail = n;
+    	myAppends++;
+    	mySize += dna.length();
+    	return this;
+    }
+    
+    /**
+     * Returns an IDnaStrand that is the reverse of this strand,
+     * e.g., for "CGAT" returns "TAGC"
+     * @return reverse strand
+     */
+    @Override
+    public IDnaStrand reverse(){
+    	Node cur = tail;
+    	StringBuilder a = new StringBuilder(cur.value);
+    	a.reverse();
+    	LinkStrand ret = new LinkStrand(a.toString());
+    	while (cur.previous != null){
+    		StringBuilder b = new StringBuilder(cur.previous.value);
+    		b.reverse();
+    		ret.append(b.toString());
+    		cur = cur.previous;
+    	}
+    	return ret;
+    }
+    
+    /**
+     * Returns a string that can be printed
+     * to reveal information about what this
+     * object has encountered as it is manipulated
+     * by append and cutAndSplice.
+     * @return
+     */
+    public String getStats(){
+    	return String.format("# append calls = %d", myAppends);
+    }
+    
+    /*public void main(String[] args){
+    	String a = "atgc";
+    	LinkStrand b = new LinkStrand("ggggggggggg");
+    	b.append(a);
+    	System.out.println(b.toString());
+    }*/
+}
