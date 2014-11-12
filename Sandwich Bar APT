@@ -1,0 +1,23 @@
+import java.util.*;
+
+public class SandwichBar {
+	public int whichOrder(String[] available, String[] order){
+		HashSet<String> avail = new HashSet<String>(Arrays.asList(available)); //to set and back eliminates duplicates
+		available = avail.toArray(new String[avail.size()]);
+		for (int j=0; j<order.length; j++){
+			String[] ingredients = order[j].split(" "); //separating sandwich order into individual components
+			int check = 0;
+			for (String g: ingredients){
+				for (int c=0; c<available.length; c++){
+					if (available[c].equals(g)){
+						check++;
+					}
+				}
+			}
+			if (check>=ingredients.length){
+				return j;
+			}
+		}
+		return -1;
+		}
+}
